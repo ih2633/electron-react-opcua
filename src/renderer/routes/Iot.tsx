@@ -3,6 +3,8 @@ import { useForm } from 'react-hook-form';
 import CheckboxTree from 'react-checkbox-tree';
 import '../styles/react-checkbox-tree.css';
 
+import TableLayout from '../components/table/layout';
+
 type SessionData = {
   ipaddress: string;
   username: string;
@@ -152,7 +154,7 @@ const Iot = () => {
                   className="label label-text text-white"
                   htmlFor="password"
                 >
-                  Passworda
+                  Password
                 </label>
                 <input
                   defaultValue="raspberry"
@@ -194,23 +196,41 @@ const Iot = () => {
             </button>
           </div>
         </div>
-        <div className="col-span-5 flex justify-center items-center">
-          <div className="text-white">
-            {monitor ? (
-              <div>
-                {monitor.map((item, idx) => {
-                  return (
-                    <div key={idx}>
-                      <p>{item.id}</p>
-                      <p>{item.value.toString()}</p>
-                    </div>
-                  );
-                })}
-              </div>
-            ) : (
-              'Loading...'
-            )}
+        <div className="col-span-5 flex justify-center ">
+          {/*// test */}
+
+          <div className="mt-8 ">
+            <TableLayout monitorItems={monitor} />
           </div>
+          {/* <div className="overflow-x-auto">
+            <table className="table w-full">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Name</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+
+              {monitor ? (
+                <tbody className="bg-red-200 ">
+                  {monitor.map((item, idx) => {
+                    return (
+                        <tr className="bg-red-200 ">
+                          <th key={idx}>{idx}</th>
+                          <td>{item.id}</td>
+                          <td>{item.value.toString()}</td>
+                        </tr>
+                    );
+                  })}
+                </tbody>
+              ) : (
+                'Loading...'
+              )}
+              
+            </table>
+          </div> */}
+          {/* test// */}
         </div>
       </div>
     </>
