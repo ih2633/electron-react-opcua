@@ -27,9 +27,7 @@ const Iot = () => {
   const [checked, setChecked] = useState([]);
   const [expanded, setExpanded] = useState([]);
   const [monitor, setMonitor] = useState<any>([]);
-
-  console.log('Rendering!!!!');
-
+  
   window.electron.ipcRenderer.changeValue('changeValue', (arg: any) => {
     console.log(arg);
     setMonitor(arg);

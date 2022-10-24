@@ -13,7 +13,7 @@ const TableLayout = (props) => {
         </thead>
 
         {props.monitorItems ? (
-          <tbody className="bg-red-200 ">
+          <tbody>
             {props.monitorItems.map((item, idx) => {
               return (
                 <tr className="bg-red-200 ">
