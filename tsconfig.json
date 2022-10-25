@@ -8,6 +8,7 @@
     "strict": true,
     "sourceMap": true,
     "baseUrl": "./src",
+    "paths": {"@/*": ["./*"]},
     "moduleResolution": "node",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -15,5 +16,6 @@
     "allowJs": true,
     "outDir": ".erb/dll"
   },
-  "exclude": ["test", "release/build", "release/app/dist", ".erb/dll"]
+  "exclude": ["test", "release/build", "release/app/dist", ".erb/dll"],
+  "include": ["**/*.ts", "**/*.tsx"]
 }

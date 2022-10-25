@@ -16,8 +16,8 @@ const TableLayout = (props) => {
           <tbody>
             {props.monitorItems.map((item, idx) => {
               return (
-                <tr className="bg-red-200 ">
-                  <th key={idx}>{idx + 1}</th>
+                <tr key={idx} className="bg-red-200 ">
+                  <th>{idx + 1}</th>
                   <td>{item.id}</td>
                   <td>{item.value.toString()}</td>
                 </tr>

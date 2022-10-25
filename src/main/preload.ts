@@ -1,4 +1,6 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
+import MonitorItem from '@/@types/MonitorItem';
+import SessionData from '@/@types/SessionData';
 
 export type Channels = 'ipc-example';
 
@@ -19,23 +21,23 @@ contextBridge.exposeInMainWorld('electron', {
     once(channel: Channels, func: (...args: unknown[]) => void) {
       ipcRenderer.once(channel, (_event, ...args) => func(...args));
     },
-    getData(channel: 'sessionStart', data: any) {
-      console.log({ data });
-      return ipcRenderer.invoke(channel, data);
+    getData(channel: 'sessionStart', connectStatus: boolean) {
+      console.log({ connectStatus });
+      return ipcRenderer.invoke(channel, connectStatus);
     },
-    disconnect(channel: 'disconnect', data: any) {
-      return ipcRenderer.invoke(channel, data);
+    disconnect(channel: 'disconnect', connectStatus: boolean) {
+      return ipcRenderer.invoke(channel, connectStatus);
     },
-    changeValue(channel: 'changeValue', func: (...args: unknown[]) => any) {
-      const subsc = (_event: IpcRendererEvent, ...args: unknown[]) =>
-        func(...args);
+    changeValue(channel: 'changeValue', func: (args: MonitorItem[]) => void) {
+      const subsc = (_event: IpcRendererEvent, args: MonitorItem[]) =>
+        func(args);
       ipcRenderer.on(channel, subsc);
 
       return () => {
         ipcRenderer.removeListener(channel, subsc);
       };
     },
-    nodeCrawler(channel: 'nodeCrawler', data: any) {
+    nodeCrawler(channel: 'nodeCrawler', data: SessionData) {
       return ipcRenderer.invoke(channel, data);
     },
   },
