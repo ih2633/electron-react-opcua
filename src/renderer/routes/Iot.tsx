@@ -2,110 +2,88 @@ import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import CheckboxTree from 'react-checkbox-tree';
 import '../styles/react-checkbox-tree.css';
+import SessionData from '@/@types/sessionData';
+import MonitorItem from "@/@types/monitorItem"
 
 import TableLayout from '../components/table/layout';
 
-type SessionData = {
-  ipaddress: string;
-  username: string;
-  password: string;
-  status: boolean;
-  monitorItems: string[];
-};
-
-const initData = {
-  ipaddress: '',
-  username: '',
+const initData: SessionData = {
+  ipAddress: '',
+  userName: '',
   password: '',
-  status: false,
   monitorItems: [],
+  status: false
 };
 
 const Iot = () => {
   const [sessionData, setSessionData] = useState<SessionData>(initData);
-  const [nodes, setNodes] = useState([]);
+  const [nodes, setNodes] = useState<string[] | null>([]);
   const [checked, setChecked] = useState([]);
   const [expanded, setExpanded] = useState([]);
-  const [monitor, setMonitor] = useState<any>([]);
-  
-  window.electron.ipcRenderer.changeValue('changeValue', (arg: any) => {
-    console.log(arg);
-    setMonitor(arg);
-    console.log({ monitor });
-  });
+  const [monitor, setMonitor] = useState<MonitorItem[]>([]);
+  const [isConnectStatus, setIsConnectStatus] = useState<boolean>(false);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-  const onSubmit = async (data: any) => {
-    data.status = false;
-    const treeArray = [];
-    const jsond = await window.electron.ipcRenderer.nodeCrawler(
+  window.electron.ipcRenderer.changeValue(
+    'changeValue',
+    (monitorItems: MonitorItem[]) => {
+      setMonitor(monitorItems);
+    }
+  );
+
+  const { register, handleSubmit } = useForm();
+  const onSubmit = async (crawleSessionData: SessionData) => {
+    const json = await window.electron.ipcRenderer.nodeCrawler(
       'nodeCrawler',
-      data
+      crawleSessionData
     );
-    await treeArray.push(jsond);
-    console.log(treeArray);
-    console.log(typeof treeArray);
-    console.log(Array.isArray(treeArray));
-    await setNodes(treeArray);
-    await setSessionData(data);
-
-    // data.status = status;
-    // console.log(data);
-    // let retData = await window.electron.ipcRenderer.getData(
-    //   'sessionStart',
-    //   data
-    // );
-    // await console.log(retData);
-    // await setSessionData(retData);
+    const opcUaNodeIdTree: string[] = [];
+    opcUaNodeIdTree.push(json);
+    await setNodes(opcUaNodeIdTree);
+    await setSessionData(crawleSessionData);
   };
 
-  const subscription = async () => {
-    console.log(sessionData);
-    const monitorItems = await substValue(checked);
-    sessionData.monitorItems = await monitorItems;
-    console.log(sessionData);
-    const retData = await window.electron.ipcRenderer.getData(
+  // OpcUaServerとの通信開始
+
+  const connect = async () => {
+
+    sessionData.monitorItems = createMonitorItemArray(checked);
+    sessionData.status = isConnectStatus
+
+    const connectStatus = await window.electron.ipcRenderer.getData(
       'sessionStart',
       sessionData
     );
-    await console.log(retData);
-    await setSessionData(retData);
+    setIsConnectStatus(connectStatus);
   };
 
-  const nodeCheck = async () => {
+  const checkNode = async () => {
     console.log({ nodes });
     console.log({ checked });
     console.log({ expanded });
     console.log({ sessionData });
-    substValue(checked);
+    createMonitorItemArray(checked);
+    console.log({isConnectStatus})
   };
+
+  // OpcUaServerとの通信終了
 
   const disconnect = async () => {
-    console.log(sessionData);
-    const disconData = await window.electron.ipcRenderer.disconnect(
-      'disconnect',
-      sessionData
-    );
-    await console.log(disconData);
-    await setSessionData(disconData);
-    await setMonitor(undefined);
+    const disConnectStatus: boolean =
+      await window.electron.ipcRenderer.disconnect(
+        'disconnect',
+        {status: isConnectStatus}
+      );
+    setIsConnectStatus(disConnectStatus);
   };
 
-  //  window.electron.ipcRenderer.changeValue('changeValue',(arg)=>{
-  //       console.log(arg)
-  //     })
-
-  const substValue = (data: Array<any>) => {
-    const returnArray = data.map((str) => {
-      const tempValue = str.substr(str.indexOf('//') + 2);
-      return tempValue;
-    });
-    console.log(returnArray);
-    return returnArray;
+  const createMonitorItemArray = (preSubstringMonitorItems: string[]) => {
+    const postSubstringMonitorItems: string[] = preSubstringMonitorItems.map(
+      (x) => {
+        const tmp = x.substring(x.indexOf('//') + 2);
+        return tmp;
+      }
+    );
+    return postSubstringMonitorItems;
   };
 
   return (
@@ -129,7 +107,7 @@ const Iot = () => {
                   className="input input-bordered w-full max-w-xs"
                   type="text"
                   id="ipAddress"
-                  {...register('ipaddress')}
+                  {...register('ipAddress')}
                 />
               </div>
               <div>
@@ -143,8 +121,8 @@ const Iot = () => {
                   defaultValue="ihorie"
                   className="input input-bordered w-full max-w-xs"
                   type="text"
-                  id="username"
-                  {...register('username')}
+                  id="userName"
+                  {...register('userName')}
                 />
               </div>
               <div>
@@ -181,10 +159,10 @@ const Iot = () => {
             />
           </div>
           <div className="mt-6 flex">
-            <button className="btn glass" onClick={subscription}>
+            <button className="btn glass" onClick={connect}>
               subscription
             </button>
-            <button className="btn glass ml-4" onClick={nodeCheck}>
+            <button className="btn glass ml-4" onClick={checkNode}>
               nodecheck
             </button>
           </div>
@@ -198,37 +176,10 @@ const Iot = () => {
           {/*// test */}
 
           <div className="mt-8 ">
-            <TableLayout monitorItems={monitor} />
+            {isConnectStatus ?            <TableLayout monitorItems={monitor} /> :
+            <div className="text-white">disconnected...</div>}
+ 
           </div>
-          {/* <div className="overflow-x-auto">
-            <table className="table w-full">
-              <thead>
-                <tr>
-                  <th></th>
-                  <th>Name</th>
-                  <th>Value</th>
-                </tr>
-              </thead>
-
-              {monitor ? (
-                <tbody className="bg-red-200 ">
-                  {monitor.map((item, idx) => {
-                    return (
-                        <tr className="bg-red-200 ">
-                          <th key={idx}>{idx}</th>
-                          <td>{item.id}</td>
-                          <td>{item.value.toString()}</td>
-                        </tr>
-                    );
-                  })}
-                </tbody>
-              ) : (
-                'Loading...'
-              )}
-              
-            </table>
-          </div> */}
-          {/* test// */}
         </div>
       </div>
     </>

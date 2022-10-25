@@ -14,7 +14,6 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
-import { session } from './func/connect';
 import { crawle } from './func/crawler/crawler';
 import { multipleSession } from './func/multipleSubscription';
 
@@ -123,11 +122,11 @@ export const mainWin = () => {
  * Add event listeners...
  */
 
-ipcMain.handle('sessionStart', async (_, data: any) => {
-  console.log(data);
-  const sessionData = await multipleSession(data);
-  await console.log(sessionData);
-  return sessionData;
+ipcMain.handle('sessionStart', async (_, sessionData: any) => {
+  console.log(sessionData);
+  const connnectStatus = await multipleSession(sessionData);
+  console.log({ connnectStatus });
+  return connnectStatus;
 });
 
 ipcMain.handle('disconnect', async (_, data: any) => {
