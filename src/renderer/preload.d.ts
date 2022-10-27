@@ -1,6 +1,6 @@
 import { Channels } from 'main/preload';
-import MonitorItem from '@/@types/MonitorItem';
-import SessionData from '@/@types/SessionData'
+import {MonitorItem} from '@/@types/MonitorItem';
+import {SessionData} from '@/@types/SessionData'
 
 declare global {
   interface Window {
