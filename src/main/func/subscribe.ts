@@ -10,7 +10,7 @@ import {
   TimestampsToReturn,
 } from 'node-opcua';
 
-import { MonitorItem } from "@/@types/monitorItem"
+import MonitorItem from "@/@types/monitorItem"
 
 export const subscribe = async (
   subscription: ClientSubscription,
@@ -30,7 +30,7 @@ export const subscribe = async (
     TimestampsToReturn.Both
   );
 
-  const changeValues = new Array<MonitorItem>();
+  const changeValues: MonitorItem[] = [];
   group.on('changed', (monitoredItem, dataValue, index) => {
     changeValues[index] = {
       value: dataValue.value.value,
