@@ -1,4 +1,4 @@
-type SessionData = {
+export type SessionData = {
   ipAddress: string;
   userName: string;
   password: string;
@@ -6,4 +6,10 @@ type SessionData = {
   status: boolean;
 };
 
-export default SessionData;
+
+export type NodeInfo = {
+  id: string;
+  label: string;
+  value: string;
+  children: NodeInfo;
+};
