@@ -13,7 +13,7 @@ import {
 } from 'node-opcua';
 
 import { subscribe } from './subscribe';
-import SessionData from '@/@types/SessionData';
+import {SessionData} from '@/@types/SessionData';
 
 const connectionStrategy = {
   initialDelay: 1000,
@@ -67,11 +67,12 @@ const connectAndSession = async (sessionData: SessionData) => {
   const { userName, password } = sessionData;
   const endPointUrl = `opc.tcp://${sessionData.ipAddress}:4840`;
   await client.connect(endPointUrl);
+  
   // step 2 : createSession
-  const info: UserIdentityInfoUserName = {
+
+  return await client.createSession(<UserIdentityInfoUserName>{
     type: UserTokenType.UserName,
     userName: userName,
     password: password,
-  };
-  return await client.createSession(info);
+  });
 };

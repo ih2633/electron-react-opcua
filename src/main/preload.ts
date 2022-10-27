@@ -1,6 +1,6 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
-import MonitorItem from '@/@types/MonitorItem';
-import SessionData from '@/@types/SessionData';
+import {MonitorItem} from '@/@types/MonitorItem';
+import {SessionData} from '@/@types/SessionData';
 
 export type Channels = 'ipc-example';
 

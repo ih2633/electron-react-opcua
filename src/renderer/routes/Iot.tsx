@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import CheckboxTree from 'react-checkbox-tree';
 import '../styles/react-checkbox-tree.css';
-import SessionData from '@/@types/sessionData';
-import MonitorItem from "@/@types/monitorItem"
+import {SessionData} from '@/@types/sessionData';
+import {MonitorItem} from "@/@types/monitorItem"
 
 import TableLayout from '../components/table/layout';
 
