@@ -1,4 +1,4 @@
-import { mainWin } from "../main"
+import { mainWin } from '../main';
 import {
   OPCUAClient,
   MessageSecurityMode,
@@ -10,7 +10,7 @@ import {
   TimestampsToReturn,
 } from 'node-opcua';
 
-import { MonitorItem } from "@/@types/monitorItem"
+import { MonitorItem } from '@/@types/monitorItem';
 
 export const subscribe = async (
   subscription: ClientSubscription,

@@ -5,10 +5,9 @@ import {
   UserTokenType,
 } from 'node-opcua';
 import _ from 'lodash';
-import {SessionData} from '@/@types/SessionData'
+import { SessionData } from '@/@types/SessionData';
 import { NodeInfo } from '@/@types/sessionData';
 import { v4 as uuidv4 } from 'uuid';
-
 
 export class NodeTree {
   renameNodeId = (nodeIds: any) => {

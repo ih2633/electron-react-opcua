@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import CheckboxTree from 'react-checkbox-tree';
 import '../styles/react-checkbox-tree.css';
-import {SessionData} from '@/@types/sessionData';
-import {MonitorItem} from "@/@types/monitorItem"
+import { SessionData } from '@/@types/sessionData';
+import { MonitorItem } from '@/@types/monitorItem';
 
 import TableLayout from '../components/table/layout';
 
@@ -12,7 +12,7 @@ const initData: SessionData = {
   userName: '',
   password: '',
   monitorItems: [],
-  status: false
+  status: false,
 };
 
 const Iot = () => {
@@ -45,9 +45,8 @@ const Iot = () => {
   // OpcUaServerとの通信開始
 
   const connect = async () => {
-
     sessionData.monitorItems = createMonitorItemArray(checked);
-    sessionData.status = isConnectStatus
+    sessionData.status = isConnectStatus;
 
     const connectStatus = await window.electron.ipcRenderer.getData(
       'sessionStart',
@@ -62,17 +61,16 @@ const Iot = () => {
     console.log({ expanded });
     console.log({ sessionData });
     createMonitorItemArray(checked);
-    console.log({isConnectStatus})
+    console.log({ isConnectStatus });
   };
 
   // OpcUaServerとの通信終了
 
   const disconnect = async () => {
     const disConnectStatus: boolean =
-      await window.electron.ipcRenderer.disconnect(
-        'disconnect',
-        {status: isConnectStatus}
-      );
+      await window.electron.ipcRenderer.disconnect('disconnect', {
+        status: isConnectStatus,
+      });
     setIsConnectStatus(disConnectStatus);
   };
 
@@ -88,11 +86,11 @@ const Iot = () => {
 
   return (
     <>
-      <div className="grid grid-cols-6 h-screen">
-        <div className="col-span-1 flex flex-col justify-center">
+      <div className="grid grid-cols-6 h-screen mx-8">
+        <div className="col-span-2 flex flex-col justify-center">
           <div className="mt-1">
             <form
-              className="text-gray-700 text-center form-control w-full max-w-xs"
+              className="text-gray-700 text-center form-control mx-8"
               onSubmit={handleSubmit(onSubmit)}
             >
               <div>
@@ -140,12 +138,34 @@ const Iot = () => {
                   {...register('password')}
                 />
               </div>
-              <button type="submit" className="btn glass mt-5">
-                crawler
-              </button>
+              <div>
+                <button
+                  type="submit"
+                  className="btn glass mt-5 w-full max-w-xs"
+                >
+                  nodeIDを取得
+                </button>
+              </div>
+              <div>
+                {isConnectStatus ? (
+                  <button
+                    className="btn glass  mt-5 w-full max-w-xs"
+                    onClick={disconnect}
+                  >
+                    disconnect
+                  </button>
+                ) : (
+                  <button
+                    className="btn glass mt-5 w-full max-w-xs"
+                    onClick={connect}
+                  >
+                    connect
+                  </button>
+                )}
+              </div>
             </form>
           </div>
-          <div className="text-white mt-6">
+          <div className="text-white truncate ml-16 mt-6">
             <CheckboxTree
               nodes={nodes}
               checked={checked}
@@ -158,27 +178,16 @@ const Iot = () => {
               }}
             />
           </div>
-          <div className="mt-6 flex">
-            <button className="btn glass" onClick={connect}>
-              subscription
-            </button>
-            <button className="btn glass ml-4" onClick={checkNode}>
-              nodecheck
-            </button>
-          </div>
-          <div className="mt-5">
-            <button className="btn glass" onClick={disconnect}>
-              disconnect
-            </button>
-          </div>
-        </div>
-        <div className="col-span-5 flex justify-center ">
-          {/*// test */}
 
+          <div className="mt-5"></div>
+        </div>
+        <div className="col-span-4 flex ">
           <div className="mt-8 ">
-            {isConnectStatus ?            <TableLayout monitorItems={monitor} /> :
-            <div className="text-white">disconnected...</div>}
- 
+            {isConnectStatus ? (
+              <TableLayout monitorItems={monitor} />
+            ) : (
+              <div className="text-white">disconnected...</div>
+            )}
           </div>
         </div>
       </div>

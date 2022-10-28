@@ -5,10 +5,10 @@ const TableLayout = (props) => {
     <div className="overflow-x-auto">
       <table className="table w-full">
         <thead>
-          <tr>
+          <tr className="">
             <th></th>
-            <th>Name</th>
             <th>Value</th>
+            <th>Name</th>
           </tr>
         </thead>
 
@@ -18,8 +18,8 @@ const TableLayout = (props) => {
               return (
                 <tr key={idx} className="bg-red-200 ">
                   <th>{idx + 1}</th>
-                  <td>{item.id}</td>
                   <td>{item.value.toString()}</td>
+                  <td>{item.id}</td>
                 </tr>
               );
             })}
