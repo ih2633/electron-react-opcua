@@ -14,7 +14,7 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
-import { crawle } from './func/crawler/crawler';
+import { createTree } from './func/treeNodeId';
 import { multipleSession } from './func/multipleSubscription';
 
 class AppUpdater {
@@ -136,8 +136,8 @@ ipcMain.handle('disconnect', async (_, data: any) => {
 });
 
 ipcMain.handle('nodeCrawler', async (_, data: any) => {
-  console.log(data);
-  const publicNodes = await crawle(data);
+
+  const publicNodes = await createTree(data);
   return publicNodes;
 });
 

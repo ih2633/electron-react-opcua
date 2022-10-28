@@ -6,10 +6,9 @@ export type SessionData = {
   status: boolean;
 };
 
-
 export type NodeInfo = {
   id: string;
   label: string;
   value: string;
-  children: NodeInfo;
+  children?: NodeInfo;
 };
