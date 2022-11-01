@@ -1,4 +1,4 @@
-<img src=".erb/img/gamen.png" width="100%" />
+<img src=".erb/img/gamen.PNG" alt="drawing" width="700" />
 
 <br>
 
